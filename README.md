@@ -41,3 +41,7 @@
     };
 }
 ```
+
+## More
+
+[Nixpkgs contributing guidelines](https://github.com/NixOS/nixpkgs/blob/master/pkgs/README.md#versioning)
