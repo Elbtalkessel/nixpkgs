@@ -25,11 +25,12 @@
         };
 
       # Packages structure as follows:
-      # packages/
-      #   <package-group>/
-      #     <package-name>/
-      #       default.nix
-      # Read children directory function reads a given path (./packages)
+      # pkgs/
+      #   by-name/
+      #     <package-group>/
+      #       <package-name>/
+      #         default.nix
+      # Read child directory function reads a given path (./pkgs/by-name)
       # and returns an absolute paths to each <package-name>/
       rcd =
         p:
@@ -37,7 +38,7 @@
         |> nixpkgs.lib.filterAttrs (_: val: val == "directory")
         |> builtins.attrNames
         |> map (v: nixpkgs.lib.path.append p v);
-      pp = rcd ./packages |> map rcd |> nixpkgs.lib.flatten;
+      pp = rcd ./pkgs/by-name |> map rcd |> nixpkgs.lib.flatten;
 
       makePackages =
         system:
