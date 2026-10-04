@@ -34,11 +34,12 @@
       # and returns an absolute paths to each <package-name>/
       rcd =
         p:
-        builtins.readDir p
-        |> nixpkgs.lib.filterAttrs (_: val: val == "directory")
-        |> builtins.attrNames
-        |> map (v: nixpkgs.lib.path.append p v);
-      pp = rcd ./pkgs/by-name |> map rcd |> nixpkgs.lib.flatten;
+        map (v: nixpkgs.lib.path.append p v) (
+          builtins.attrNames (
+            nixpkgs.lib.filterAttrs (_: val: val == "directory") (builtins.readDir p)
+          )
+        );
+      pp = nixpkgs.lib.flatten (map rcd (rcd ./pkgs/by-name));
 
       makePackages =
         system:
@@ -48,7 +49,11 @@
         builtins.listToAttrs (
           map (p: {
             name = (baseNameOf p);
-            value = pkgs.callPackage p { };
+            value =
+              let
+                pkg = pkgs.callPackage p { };
+              in
+              if pkgs.lib.isDerivation pkg then pkg else pkg.preview or pkg.default or pkg.chili or pkg;
           }) pp
         );
     in

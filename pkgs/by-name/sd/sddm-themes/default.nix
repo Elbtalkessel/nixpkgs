@@ -9,8 +9,8 @@
     version = "0.1.5";
     dontBuild = true;
     propagatedUserEnvPkgs = [
-      libsForQt5.qt5.qtgraphicaleffects
-      libsForQt5.qt5.qtquickcontrols
+      libsForQt5.qtgraphicaleffects
+      libsForQt5.qtquickcontrols
     ];
     installPhase = ''
       mkdir -p $out/share/sddm/themes
