@@ -11,8 +11,8 @@ pkgs.python3Packages.buildPythonApplication rec {
     domain = "gitea.x.home.arpa";
     owner = "python";
     repo = "gather";
-    rev = "aebfa67e9579602e6773a279bb8d4db6d9cfc3af";
-    hash = "sha256-pL6Qxh6lMEV3/a/5TjyqHYw1mguFMC39f8QSd4QKjsQ=";
+    rev = "1c19003d3e069d6355fc27aa5f180df715a9658c";
+    hash = "sha256-KpE7NpiafssjmPJHixq6dMoeCmPQH4ZS1zbLkS6VDls=";
   };
 
   pyproject = true;
