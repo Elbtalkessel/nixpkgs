@@ -19,16 +19,18 @@ class Result(typing.NamedTuple):
     err: str
     code: int
 
+type ProcArg = str | bytes | os.PathLike[str] | os.PathLike[bytes]
 
 class Process:
-    args: tuple[str, ...]
+    args: tuple[ProcArg, ...]
 
-    def __init__(self, *args: str, timeout=15):
-        self.args = args if len(args) > 1 else tuple(shlex.split(args[0]))
+    def __init__(self, arg: str, *args: ProcArg, timeout=15, cwd: ProcArg | None = None):
+        self.args = tuple(shlex.split(arg)) if len(args) == 0 else (arg,) + args
         self.timeout = timeout
+        self.cwd = cwd
 
     def run(self) -> Result:
-        process = Popen(self.args, stdout=PIPE, stderr=PIPE)
+        process = Popen(self.args, stdout=PIPE, stderr=PIPE, cwd=self.cwd)
         try:
             stdout, stderr = process.communicate(timeout=self.timeout)
         except TimeoutExpired:
@@ -112,6 +114,16 @@ class Git:
             print(r.err)
 
 
+class Devenv:
+    root: Path
+
+    def __init__(self, root: Path):
+        self.root = root
+
+    def setup(self):
+        Process("devenv shell -- echo 'devenv ready'", cwd=self.root).try_run()
+
+
 class Manager:
     root: Path
     _worktrees: Path
@@ -178,7 +190,9 @@ class Manager:
             print(f"{name}: {value}")
 
     def worktree_add(self, branch: str) -> Path:
-        return self.git.worktree_add(self.project, self.worktrees, branch)
+        wt = self.git.worktree_add(self.project, self.worktrees, branch)
+        Devenv(wt).setup()
+        return wt
 
     def worktree_remove(self, branch: str) -> None:
         self.git.worktree_remove(self.project, self.worktrees, branch)

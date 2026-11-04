@@ -1,7 +1,7 @@
 { pkgs }:
 pkgs.python3Packages.buildPythonApplication rec {
   pname = "gidged";
-  version = "0.0.1";
+  version = "0.0.2";
   pyproject = false;
   propagatedBuildInputs = with pkgs; [
     git
