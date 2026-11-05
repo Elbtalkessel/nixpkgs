@@ -11,8 +11,8 @@ pkgs.python3Packages.buildPythonApplication rec {
     domain = "gitea.x.home.arpa";
     owner = "python";
     repo = "gather";
-    rev = "1c19003d3e069d6355fc27aa5f180df715a9658c";
-    hash = "sha256-KpE7NpiafssjmPJHixq6dMoeCmPQH4ZS1zbLkS6VDls=";
+    rev = "e515e8e6f3df6abdcf7df9c3d2fe13c7111759a9";
+    hash = "sha256-KRKuzJfWc7yrFWuiUtgJUN3QANInPzuN7QUFYfp/dLA=";
   };
 
   pyproject = true;
@@ -20,6 +20,9 @@ pkgs.python3Packages.buildPythonApplication rec {
 
   propagatedBuildInputs = with pkgs; [
     git
+    # The `gather-mcp` entry point imports the MCP SDK at runtime; it is an
+    # optional Python extra, so it is not pulled in by the pyproject build.
+    python3Packages.mcp
   ];
 
   meta = with lib; {
